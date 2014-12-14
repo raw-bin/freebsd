@@ -38,6 +38,9 @@ __FBSDID("$FreeBSD$");
 #include <sys/ptrace.h>
 #include <sys/syscall.h>
 #include <sys/sysent.h>
+#ifdef KDB
+#include <sys/kdb.h>
+#endif
 
 #include <vm/vm.h>
 #include <vm/pmap.h>
@@ -46,6 +49,16 @@ __FBSDID("$FreeBSD$");
 #include <vm/vm_extern.h>
 
 #include <machine/frame.h>
+
+#ifdef KDB
+#include <machine/db_machdep.h>
+#endif
+
+#ifdef DDB
+#include <ddb/db_output.h>
+#endif
+
+
 
 /* Called from exception.S */
 void do_el1h_sync(struct trapframe *);
@@ -210,7 +223,11 @@ do_el1h_sync(struct trapframe *frame)
 		break;
 	case 0x3c:
 		printf("Breakpoint %x\n", (uint32_t)(esr & 0xffffff));
-		panic("breakpoint");
+#ifdef KDB
+		kdb_trap(T_BREAKPOINT, 0, frame);
+#else
+		printf("No debugger in kernel.\n");
+#endif
 		break;
 	default:
 		panic("Unknown exception %x\n", exception);
@@ -241,6 +258,14 @@ do_el0_sync(struct trapframe *frame)
 	case 0x20:
 	case 0x24:
 		data_abort(frame, esr, 1);
+		break;
+	case 0x30:
+		printf("Breakpoint %x\n", (uint32_t)(esr & 0xffffff));
+#ifdef KDB
+		kdb_trap(T_BREAKPOINT, 0, frame);
+#else
+		printf("No debugger in kernel.\n");
+#endif
 		break;
 	default:
 		panic("Unknown exception %x\n", exception);

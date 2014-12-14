@@ -38,7 +38,7 @@
 typedef vm_offset_t	db_addr_t;
 typedef long		db_expr_t;
 
-#define	PC_REGS()	((db_addr_t)kdb_thrctx->pcb_pc)
+#define	PC_REGS()	((db_addr_t)kdb_thrctx->pcb_x[30])
 
 /* This is a brk instruction, TODO: Is this correct? */
 #define	BKPT_INST	(0xd4200000)
