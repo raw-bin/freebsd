@@ -194,6 +194,7 @@ ENTRY(fork_trampoline)
 	mov	x0, x8
 	mov	x1, x9
 	mov	x2, sp
+	mov	fp, #0	/* Stack traceback stops here. */
 	bl	_C_LABEL(fork_exit)
 
 	/* Back up the stack pointer */
