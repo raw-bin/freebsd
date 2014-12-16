@@ -72,4 +72,13 @@
 
 #define BUS_DMA_TAG_VALID(t)    ((t) != (bus_dma_tag_t)0)
 
+struct arm64_dma_range {
+	bus_addr_t      dr_sysbase;     /* system base address */
+	bus_addr_t      dr_busbase;     /* appears here on bus */
+	bus_size_t      dr_len;         /* length of range */
+};
+
+struct arm64_dma_range	*bus_dma_get_range(void);
+int	bus_dma_get_range_nb(void);
+
 #endif /* _ARM_BUS_DMA_H */
