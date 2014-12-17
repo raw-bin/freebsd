@@ -1,6 +1,10 @@
 /*-
  * Copyright (c) 2014 Andrew Turner
+ * Copyright (c) 2014 The FreeBSD Foundation
  * All rights reserved.
+ *
+ * Portions of this software were developed by Andrew Turner
+ * under sponsorship from the FreeBSD Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,115 +29,55 @@
  *
  */
 
-#include <sys/cdefs.h>
+#include <machine/asm.h>
 __FBSDID("$FreeBSD$");
 
-#include <sys/param.h>
-#include <sys/systm.h>
-#include <sys/resourcevar.h>
+#include <machine/setjmp.h>
 
-int
-fubyte(volatile const void *base)
-{
+ENTRY(setjmp)
+	/* Store the general purpose registers and lr */
+	stp	x19, x20, [x0], #16
+	stp	x21, x22, [x0], #16
+	stp	x23, x24, [x0], #16
+	stp	x25, x26, [x0], #16
+	stp	x27, x28, [x0], #16
+	stp	x29, lr, [x0], #16
 
-	return *(volatile uint8_t *)base;
-}
+	/* Store the vfp registers */
+	stp	d8, d9, [x0], #16
+	stp	d10, d11, [x0], #16
+	stp	d12, d13, [x0], #16
+	stp	d14, d15, [x0], #16
 
-long
-fuword(volatile const void *base)
-{
+	/* Store the stack pointer */
+	mov	x8, sp
+	str	x8, [x0]
 
-	return *(volatile long *)base;
-}
+	/* Return value */
+	mov	x0, #0
+	ret
+END(setjmp)
 
-int
-fuword16(volatile const void *base)
-{
+ENTRY(longjmp)
+	/* Restore the general purpose registers and lr */
+	ldp	x19, x20, [x0], #16
+	ldp	x21, x22, [x0], #16
+	ldp	x23, x24, [x0], #16
+	ldp	x25, x26, [x0], #16
+	ldp	x27, x28, [x0], #16
+	ldp	x29, lr, [x0], #16
 
-	panic("fuword16");
-}
+	/* Restore the vfp registers */
+	ldp	d8, d9, [x0], #16
+	ldp	d10, d11, [x0], #16
+	ldp	d12, d13, [x0], #16
+	ldp	d14, d15, [x0], #16
 
-int32_t
-fuword32(volatile const void *base)
-{
+	/* Store the stack pointer */
+	ldr	x8, [x0]
+	mov	sp, x8
 
-	panic("fuword32");
-}
-
-int64_t
-fuword64(volatile const void *base)
-{
-
-	panic("fuword64");
-}
-
-int
-fuswintr(void *base)
-{
-
-	panic("fuswintr");
-}
-
-int
-subyte(volatile void *base, int byte)
-{
-
-	*(volatile uint8_t *)base = byte;
-
-	return 0;
-}
-
-int
-suword(volatile void *base, long word)
-{
-
-	*(volatile long *)base = word;
-
-	return 0;
-}
-
-int
-suword16(volatile void *base, int word)
-{
-
-	panic("suword16");
-}
-
-int
-suword32(volatile void *base, int32_t word)
-{
-
-	*(volatile int32_t *)base = word;
-
-	return 0;
-}
-
-int
-suword64(volatile void *base, int64_t word)
-{
-
-	*(volatile int64_t *)base = word;
-
-	return 0;
-}
-
-int
-suswintr(void *base, int word)
-{
-
-	panic("suswintr");
-}
-
-uint32_t
-casuword32(volatile uint32_t *base, uint32_t oldval, uint32_t newval)
-{
-
-	panic("casuword32");
-}
-
-u_long
-casuword(volatile u_long *p, u_long oldval, u_long newval)
-{
-
-	panic("casuword");
-}
+	/* Load the return value */
+	mov	x0, x1
+	ret
+END(longjmp)
