@@ -213,7 +213,7 @@ arm_gic_v3_detach(device_t dev)
 	struct gic_v3_softc *sc;
 	size_t i;
 	int rid;
-	
+
 	sc = device_get_softc(dev);
 
 	if (device_is_attached(dev)) {
@@ -223,7 +223,7 @@ arm_gic_v3_detach(device_t dev)
 	}
 	for (i = 0, rid = 0; i < (sc->gic_r_nregions + 1); i++, rid++)
 		bus_release_resource(dev, SYS_RES_MEMORY, rid, sc->gic_res[rid]);
-	
+
 	free(sc->gic_res, M_GIC_V3);
 	free(sc->gic_r_regions, M_GIC_V3);
 
@@ -296,7 +296,7 @@ arm_gic_v3_unmask_irq(device_t dev, u_int irq)
 	enum gic_v3_xdist xdist;
 
 	sc = device_get_softc(dev);
-	
+
 	mask = (1 << (irq % 32));
 
 	if (irq < 32) { /* SGIs and PPIs in corresponding Re-Distributor */
@@ -364,7 +364,7 @@ gic_v3_cpu_enable_sre(struct gic_v3_softc *sc)
 	u_int cpuid;
 
 	cpuid = PCPU_GET(cpuid);
-	/* 
+	/*
 	 * Set the SRE bit to enable access to GIC CPU interface
 	 * via system registers.
 	 */
@@ -541,7 +541,7 @@ gic_v3_redist_wake(struct gic_v3_softc *sc)
 	/* Wake up Re-Distributor for this CPU */
 	waker &= ~GICR_WAKER_PS;
 	gic_r_write(sc, 4, GICR_WAKER, waker);
-	/* 
+	/*
 	 * When clearing ProcessorSleep bit it is required to wait for
 	 * ChildrenAsleep to become zero following the processor power-on.
 	 */
@@ -554,8 +554,8 @@ gic_v3_redist_wake(struct gic_v3_softc *sc)
 			return (ENXIO);
 		}
 	}
-	
-	if (bootverbose) {	
+
+	if (bootverbose) {
 		device_printf(sc->dev, "CPU%u Re-Distributor woke up\n",
 		    PCPU_GET(cpuid));
 	}
