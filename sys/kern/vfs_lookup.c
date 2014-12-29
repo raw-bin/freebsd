@@ -520,7 +520,7 @@ dirloop:
 	cnp->cn_consume = 0;
 	for (cp = cnp->cn_nameptr; *cp != 0 && *cp != '/'; cp++)
 		continue;
-	cnp->cn_namelen = cp - cnp->cn_nameptr;
+	cnp->cn_namelen = MIN(ndp->ni_pathlen, cp - cnp->cn_nameptr);
 	if (cnp->cn_namelen > NAME_MAX) {
 		error = ENAMETOOLONG;
 		goto bad;
