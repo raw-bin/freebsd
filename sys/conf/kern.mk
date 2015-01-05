@@ -77,7 +77,12 @@ CFLAGS+=	-mno-mmx -mno-sse -msoft-float
 INLINE_LIMIT?=	8000
 .endif
 
-.if ${MACHINE_CPUARCH} == "arm" || ${MACHINE_CPUARCH} == "arm64"
+.if ${MACHINE_CPUARCH} == "arm"
+INLINE_LIMIT?=	8000
+.endif
+
+.if ${MACHINE_CPUARCH} == "arm64"
+CFLAGS.clang+=	-mcmodel=large
 INLINE_LIMIT?=	8000
 .endif
 
