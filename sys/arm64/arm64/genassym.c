@@ -56,4 +56,7 @@ ASSYM(TD_PCB, offsetof(struct thread, td_pcb));
 ASSYM(TD_FLAGS, offsetof(struct thread, td_flags));
 ASSYM(TD_LOCK, offsetof(struct thread, td_lock));
 
+ASSYM(PC_CPU, offsetof(struct pcpu, pc_cpu));
+ASSYM(PC_CURPMAP, offsetof(struct pcpu, pc_curpmap));
+
 ASSYM(TF_X, offsetof(struct trapframe, tf_x));
