@@ -50,6 +50,13 @@ ASSYM(PCB_SP, offsetof(struct pcb, pcb_sp));
 ASSYM(PCB_L1ADDR, offsetof(struct pcb, pcb_l1addr));
 ASSYM(PCB_ONFAULT, offsetof(struct pcb, pcb_onfault));
 
+ASSYM(CF_SETTTB, offsetof(struct cpu_functions, cf_setttb));
+ASSYM(CF_CONTROL, offsetof(struct cpu_functions, cf_control));
+ASSYM(CF_CONTEXT_SWITCH, offsetof(struct cpu_functions, cf_context_switch));
+ASSYM(CF_DCACHE_WB_RANGE, offsetof(struct cpu_functions, cf_dcache_wb_range));
+ASSYM(CF_L2CACHE_WB_RANGE, offsetof(struct cpu_functions, cf_l2cache_wb_range));
+ASSYM(CF_TLB_FLUSHID_SE, offsetof(struct cpu_functions, cf_tlb_flushID_SE));
+
 ASSYM(SF_UC, offsetof(struct sigframe, sf_uc));
 
 ASSYM(TD_PCB, offsetof(struct thread, td_pcb));

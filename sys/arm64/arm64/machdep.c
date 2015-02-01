@@ -735,6 +735,8 @@ initarm(struct arm64_bootparams *abp)
 
 	printf("In initarm on arm64\n");
 
+	set_cpufuncs();
+
 	/* Set the module data location */
 	preload_metadata = (caddr_t)(uintptr_t)(abp->modulep);
 
